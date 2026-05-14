@@ -9,8 +9,9 @@ import { GridRowNoCheckboxView } from "./views/GridRowNoCheckboxView";
 import { CardView } from "./views/CardView";
 import { ChartView } from "./views/ChartView";
 import { TreeView } from "./views/TreeView";
+import { FilterView } from "./views/FilterView";
 
-type Tab = "docs" | "tests" | "tile" | "cards" | "list" | "tree" | "grid-row-cb" | "grid-row" | "grid-col" | "chart";
+type Tab = "docs" | "tests" | "tile" | "cards" | "list" | "filter" | "tree" | "grid-row-cb" | "grid-row" | "grid-col" | "chart";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "docs", label: "Pattern Documentation" },
@@ -18,6 +19,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "tile", label: "Tile View" },
   { id: "cards", label: "Card View" },
   { id: "list", label: "List View" },
+  { id: "filter", label: "Vertical Filter" },
   { id: "tree", label: "Tree View" },
   { id: "grid-row-cb", label: "Grid Rows ✓" },
   { id: "grid-row", label: "Grid Rows" },
@@ -68,6 +70,7 @@ export default function App() {
         {active === "tile" && <TileView />}
         {active === "cards" && <CardView />}
         {active === "list" && <ListView />}
+        {active === "filter" && <FilterView />}
         {active === "tree" && <TreeView />}
         {active === "grid-row-cb" && <GridRowView />}
         {active === "grid-row" && <GridRowNoCheckboxView />}

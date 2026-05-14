@@ -281,32 +281,61 @@ export function PatternDocs() {
         </div>
 
         {/* Keyboard */}
-        <div className="doc-card">
+        <div className="doc-card full-width">
           <h3>16. Keyboard Behavior</h3>
-          <p className="doc-purpose">Full keyboard equivalents for every mouse interaction.</p>
+          <p className="doc-purpose">Full keyboard navigation and selection. Arrows move focus only — press Space/Enter to act.</p>
+
+          <h4 style={{fontSize: 12, textTransform: "uppercase", letterSpacing: 0.8, color: "var(--text-muted)", marginTop: 16, marginBottom: 8}}>Navigation (move focus only)</h4>
+          <table className="doc-table">
+            <thead>
+              <tr><th>Key</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>Arrow ↑↓←→</code></td><td>Move focus to next/previous item — <strong>no selection change</strong></td></tr>
+              <tr><td><code>Home</code></td><td>Jump focus to first item</td></tr>
+              <tr><td><code>End</code></td><td>Jump focus to last item</td></tr>
+            </tbody>
+          </table>
+
+          <h4 style={{fontSize: 12, textTransform: "uppercase", letterSpacing: 0.8, color: "var(--text-muted)", marginTop: 16, marginBottom: 8}}>Selection (act on focused item)</h4>
           <table className="doc-table">
             <thead>
               <tr><th>Key</th><th>Action</th><th>Mouse Equivalent</th></tr>
             </thead>
             <tbody>
-              <tr><td><code>Arrow ↑↓←→</code></td><td>Move focus and select item</td><td>Click</td></tr>
-              <tr><td><code>Ctrl + Arrow</code></td><td>Move focus only (no selection change)</td><td>—</td></tr>
-              <tr><td><code>Shift + Arrow</code></td><td>Extend/shrink range one item</td><td>Shift + Click</td></tr>
-              <tr><td><code>Ctrl + Shift + Arrow</code></td><td>Extend range additively</td><td>Ctrl + Shift + Click</td></tr>
-              <tr><td><code>Enter / Space</code></td><td>Toggle/select focused item</td><td>Click</td></tr>
-              <tr><td><code>Ctrl + Enter</code></td><td>Toggle focused item, preserve rest</td><td>Ctrl + Click</td></tr>
-              <tr><td><code>Shift + Enter</code></td><td>Range from anchor to focused</td><td>Shift + Click</td></tr>
-              <tr><td><code>Ctrl + Shift + Enter</code></td><td>Add range, preserve existing</td><td>Ctrl + Shift + Click</td></tr>
-              <tr><td><code>Ctrl/Cmd + A</code></td><td>Select all items</td><td>—</td></tr>
-              <tr><td><code>Home</code></td><td>Jump to first item</td><td>—</td></tr>
-              <tr><td><code>End</code></td><td>Jump to last item</td><td>—</td></tr>
-              <tr><td><code>Shift + Home</code></td><td>Select from focused to first</td><td>—</td></tr>
-              <tr><td><code>Shift + End</code></td><td>Select from focused to last</td><td>—</td></tr>
-              <tr><td><code>Escape</code></td><td>Clear all selection</td><td>—</td></tr>
+              <tr><td><code>Space / Enter</code></td><td>Select/toggle the focused item</td><td>Click</td></tr>
+              <tr><td><code>Ctrl + Space</code></td><td>Toggle focused item, preserve rest</td><td>Ctrl + Click</td></tr>
+              <tr><td><code>Shift + Space</code></td><td>Range from anchor to focused</td><td>Shift + Click</td></tr>
+              <tr><td><code>Ctrl + Shift + Space</code></td><td>Add range, preserve existing</td><td>Ctrl + Shift + Click</td></tr>
             </tbody>
           </table>
+
+          <h4 style={{fontSize: 12, textTransform: "uppercase", letterSpacing: 0.8, color: "var(--text-muted)", marginTop: 16, marginBottom: 8}}>Range extend via arrows</h4>
+          <table className="doc-table">
+            <thead>
+              <tr><th>Key</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>Shift + Arrow</code></td><td>Extend/shrink range one item at a time</td></tr>
+              <tr><td><code>Ctrl + Shift + Arrow</code></td><td>Extend range additively (preserve existing)</td></tr>
+              <tr><td><code>Shift + Home</code></td><td>Select from focused to first item</td></tr>
+              <tr><td><code>Shift + End</code></td><td>Select from focused to last item</td></tr>
+            </tbody>
+          </table>
+
+          <h4 style={{fontSize: 12, textTransform: "uppercase", letterSpacing: 0.8, color: "var(--text-muted)", marginTop: 16, marginBottom: 8}}>Utility</h4>
+          <table className="doc-table">
+            <thead>
+              <tr><th>Key</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>Ctrl/Cmd + A</code></td><td>Select all items</td></tr>
+              <tr><td><code>Escape</code></td><td>Clear all selection</td></tr>
+            </tbody>
+          </table>
+
           <div className="doc-callout">
-            Every mouse interaction has a keyboard equivalent. <code>Enter/Space</code> acts on the focused item using the same modifier logic as Click: plain = click, Ctrl = Ctrl+Click, Shift = Shift+Click, Ctrl+Shift = Ctrl+Shift+Click. <code>Ctrl+Arrow</code> lets you move focus without changing selection — then press <code>Ctrl+Enter</code> to toggle that item.
+            <strong>Arrows never select.</strong> They only move the focus ring. Press <code>Space</code> or <code>Enter</code> to commit. This matches native checkbox list behavior and is critical for building disconnected ranges via keyboard: arrow to an item → <code>Ctrl+Space</code> to toggle it → arrow elsewhere → repeat.
           </div>
         </div>
 
@@ -377,6 +406,26 @@ merge additive with existing
 focusedIndex = clickedIndex`}</pre>
             </div>
             <div className="algo-block">
+              <div className="algo-title">ARROW KEYS</div>
+              <pre>{`move focusedIndex ±1
+do NOT change selection
+shiftAnchorIndex = null`}</pre>
+            </div>
+            <div className="algo-block">
+              <div className="algo-title">SPACE / ENTER</div>
+              <pre>{`same as Click on focusedIndex
+respects clickMode
++ all modifier combos:
+  Ctrl, Shift, Ctrl+Shift`}</pre>
+            </div>
+            <div className="algo-block">
+              <div className="algo-title">SHIFT + ARROW</div>
+              <pre>{`extend range by ±1 item
+anchor = focusedIndex (if null)
+same as Shift+Click on
+  adjacent item`}</pre>
+            </div>
+            <div className="algo-block">
               <div className="algo-title">SHIFT KEY UP</div>
               <pre>{`shiftAnchorIndex = null`}</pre>
             </div>
@@ -407,6 +456,104 @@ focusedIndex = clickedIndex`}</pre>
               <span className="mm-key">Ctrl + Shift + Click</span>
               <span className="mm-desc">Add another range (preserve rest)</span>
             </div>
+          </div>
+        </div>
+
+        {/* View Type Matrix */}
+        <div className="doc-card full-width">
+          <h3>21. View Type Matrix</h3>
+          <p className="doc-purpose">How the pattern adapts to different UI types. Same hook, different configurations.</p>
+          <table className="doc-table">
+            <thead>
+              <tr><th>View</th><th>Click Mode</th><th>Checkboxes</th><th>Select All</th><th>Use Case</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Tile View</td><td><code>toggle</code></td><td>No</td><td>No</td><td>Icons, thumbnails, file grid</td></tr>
+              <tr><td>Card View</td><td><code>toggle</code></td><td>Yes (on hover)</td><td>No</td><td>Kanban cards, project boards</td></tr>
+              <tr><td>List View</td><td><code>toggle</code></td><td>Yes (always)</td><td>Yes</td><td>File list, email inbox</td></tr>
+              <tr><td>Tree View</td><td><code>toggle</code></td><td>Yes (always)</td><td>Yes</td><td>File explorer, org chart</td></tr>
+              <tr><td>Grid Rows (checkbox)</td><td><code>toggle</code></td><td>Yes (always)</td><td>Yes</td><td>Data grid with bulk actions</td></tr>
+              <tr><td>Grid Rows (no checkbox)</td><td><code>standard</code></td><td>No</td><td>No</td><td>Read-heavy data table</td></tr>
+              <tr><td>Grid Columns</td><td><code>standard</code></td><td>No</td><td>No</td><td>Spreadsheet column selection</td></tr>
+              <tr><td>Chart X-Axis</td><td><code>standard</code></td><td>No</td><td>No</td><td>Date/category range picker</td></tr>
+            </tbody>
+          </table>
+          <div className="doc-callout">
+            <strong>Rule of thumb:</strong> If the view has checkboxes or items look individually tappable (cards, tiles), use <code>toggle</code>. If the view is a data grid or spreadsheet where click means "focus on this one," use <code>standard</code>.
+          </div>
+        </div>
+
+        {/* Checkbox Patterns */}
+        <div className="doc-card full-width">
+          <h3>22. Checkbox Patterns</h3>
+          <p className="doc-purpose">Three ways to use checkboxes with range selection.</p>
+          <div className="algo-grid">
+            <div className="algo-block">
+              <div className="algo-title">ALWAYS VISIBLE</div>
+              <pre>{`Checkbox shown on every item.
+Click row = toggle checkbox.
+Header checkbox = select all.
+
+Used in: List View, Tree View,
+Grid Rows (with checkbox)`}</pre>
+            </div>
+            <div className="algo-block">
+              <div className="algo-title">SHOW ON HOVER / FOCUS / SELECTED</div>
+              <pre>{`Checkbox hidden by default.
+Appears on: hover, focus, or
+when item is selected.
+Cleaner look, same behavior.
+
+Used in: Card View`}</pre>
+            </div>
+            <div className="algo-block">
+              <div className="algo-title">NO CHECKBOX</div>
+              <pre>{`Selection shown via background
+highlight + focus ring only.
+Ctrl+Click to multi-select.
+
+Used in: Tile View, Grid Rows
+(no checkbox), Grid Columns,
+Chart X-Axis`}</pre>
+            </div>
+          </div>
+          <div className="doc-callout">
+            <strong>Important:</strong> Checkboxes are always <code>readOnly</code> visual indicators. All click handling goes through <code>onMouseDown</code> on the row/card, never <code>onChange</code> on the checkbox. This ensures Shift+Click and Ctrl+Click work correctly.
+          </div>
+        </div>
+
+        {/* Accessibility */}
+        <div className="doc-card full-width">
+          <h3>23. Accessibility</h3>
+          <p className="doc-purpose">Keyboard-first design ensures the pattern is fully operable without a mouse.</p>
+          <div className="algo-grid">
+            <div className="algo-block">
+              <div className="algo-title">FOCUS MANAGEMENT</div>
+              <pre>{`Container: tabIndex={0}
+Auto-focus on mount/tab switch
+Focused item scrolls into view
+Focus ring always visible`}</pre>
+            </div>
+            <div className="algo-block">
+              <div className="algo-title">KEYBOARD WORKFLOW</div>
+              <pre>{`Arrow keys → move focus
+Space/Enter → select/toggle
+Shift+Space → range select
+Ctrl+Space → additive toggle
+Ctrl+Shift+Space → add range`}</pre>
+            </div>
+            <div className="algo-block">
+              <div className="algo-title">SCREEN READERS</div>
+              <pre>{`Checkbox state syncs with
+isSelected() for AT.
+Focus ring provides visual
+and programmatic focus.
+role="listbox" recommended
+for production.`}</pre>
+            </div>
+          </div>
+          <div className="doc-callout">
+            <strong>Arrows never select.</strong> They only move focus. This matches native listbox behavior and allows keyboard users to navigate without accidentally changing selection. Press <code>Space</code> to commit.
           </div>
         </div>
 
