@@ -61,13 +61,15 @@ export function GridRowNoCheckboxView() {
 
   return (
     <div className="view-section">
-      <div className="view-header">
-        <h3>Grid Rows — Without Checkbox</h3>
-        <span className="view-hint">Click = select one row. Ctrl+Click = add/remove. Shift = range. Standard mode.</span>
-        <button className="btn-clear" onClick={clearSelection}>Clear</button>
+      <div className="view-sticky-toolbar">
+        <div className="view-header">
+          <h3>Grid Rows — Without Checkbox</h3>
+          <span className="view-hint">Click = select one row. Ctrl+Click = add/remove. Shift = range. Standard mode.</span>
+          <button className="btn-clear" onClick={clearSelection}>Clear</button>
+        </div>
+        <KeyboardHints />
+        <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
       </div>
-      <KeyboardHints />
-      <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
       <div className="grid-container" ref={containerRef} tabIndex={0}>
         <div className="grid-header">
           <div className="grid-cell id-cell">ID</div>

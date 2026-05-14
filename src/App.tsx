@@ -30,35 +30,37 @@ export default function App() {
 
   return (
     <div className="app">
-      <div className="banner">
-        Created by <strong>Akash</strong> for <strong>o9 Arvo Design System</strong>
-      </div>
-      <header className="app-header">
-        <div className="header-content">
-          <div className="header-left">
-            <div className="logo">RS</div>
-            <div>
-              <h1>Range Selection</h1>
-              <p className="header-sub">Enterprise Selection Pattern — Interactive Specification</p>
+      <div className="app-sticky-top">
+        <div className="banner">
+          Created by <strong>Akash</strong> for <strong>o9 Arvo Design System</strong>
+        </div>
+        <header className="app-header">
+          <div className="header-content">
+            <div className="header-left">
+              <div className="logo">RS</div>
+              <div>
+                <h1>Range Selection</h1>
+                <p className="header-sub">Enterprise Selection Pattern — Interactive Specification</p>
+              </div>
+            </div>
+            <div className="header-right">
+              <span className="header-badge">o9 Arvo</span>
             </div>
           </div>
-          <div className="header-right">
-            <span className="header-badge">o9 Arvo</span>
-          </div>
-        </div>
-      </header>
+        </header>
 
-      <nav className="tab-nav">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            className={`tab-btn ${active === tab.id ? "active" : ""}`}
-            onClick={() => setActive(tab.id)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </nav>
+        <nav className="tab-nav">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              className={`tab-btn ${active === tab.id ? "active" : ""}`}
+              onClick={() => setActive(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+      </div>
 
       <main className="main-content">
         {active === "docs" && <PatternDocs />}

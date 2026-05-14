@@ -66,13 +66,15 @@ export function ChartView() {
 
   return (
     <div className="view-section">
-      <div className="view-header">
-        <h3>Chart — X-Axis Range Selection</h3>
-        <span className="view-hint">Click bars or X-axis labels. Shift+Click for date range. Ctrl+Click to add months.</span>
-        <button className="btn-clear" onClick={clearSelection}>Clear</button>
+      <div className="view-sticky-toolbar">
+        <div className="view-header">
+          <h3>Chart — X-Axis Range Selection</h3>
+          <span className="view-hint">Click bars or X-axis labels. Shift+Click for date range. Ctrl+Click to add months.</span>
+          <button className="btn-clear" onClick={clearSelection}>Clear</button>
+        </div>
+        <KeyboardHints />
+        <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
       </div>
-      <KeyboardHints />
-      <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
 
       {summary && (
         <div className="chart-summary">

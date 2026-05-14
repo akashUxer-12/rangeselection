@@ -62,13 +62,15 @@ export function ListView() {
 
   return (
     <div className="view-section">
-      <div className="view-header">
-        <h3>List View</h3>
-        <span className="view-hint">Checkboxes auto-sync with selection state</span>
-        <button className="btn-clear" onClick={clearSelection}>Clear</button>
+      <div className="view-sticky-toolbar">
+        <div className="view-header">
+          <h3>List View</h3>
+          <span className="view-hint">Checkboxes auto-sync with selection state</span>
+          <button className="btn-clear" onClick={clearSelection}>Clear</button>
+        </div>
+        <KeyboardHints />
+        <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
       </div>
-      <KeyboardHints />
-      <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
       <div className="list-container" ref={containerRef} tabIndex={0}>
         <div className="list-header-row">
           <div className="list-cell checkbox-cell">

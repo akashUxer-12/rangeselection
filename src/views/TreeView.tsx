@@ -82,13 +82,15 @@ export function TreeView() {
 
   return (
     <div className="view-section">
-      <div className="view-header">
-        <h3>Tree View</h3>
-        <span className="view-hint">File tree with checkboxes. Click to toggle, Shift for range. Like VS Code explorer.</span>
-        <button className="btn-clear" onClick={clearSelection}>Clear</button>
+      <div className="view-sticky-toolbar">
+        <div className="view-header">
+          <h3>Tree View</h3>
+          <span className="view-hint">File tree with checkboxes. Click to toggle, Shift for range. Like VS Code explorer.</span>
+          <button className="btn-clear" onClick={clearSelection}>Clear</button>
+        </div>
+        <KeyboardHints />
+        <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
       </div>
-      <KeyboardHints />
-      <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
 
       {selectedFiles.length > 0 && (
         <div className="tree-selection-summary">

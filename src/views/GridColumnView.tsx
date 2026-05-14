@@ -45,13 +45,15 @@ export function GridColumnView() {
 
   return (
     <div className="view-section">
-      <div className="view-header">
-        <h3>Grid View — Column Selection</h3>
-        <span className="view-hint">Click = select one column. Ctrl+Click = add/remove. Shift = range. Spreadsheet-style.</span>
-        <button className="btn-clear" onClick={clearSelection}>Clear</button>
+      <div className="view-sticky-toolbar">
+        <div className="view-header">
+          <h3>Grid View — Column Selection</h3>
+          <span className="view-hint">Click = select one column. Ctrl+Click = add/remove. Shift = range. Spreadsheet-style.</span>
+          <button className="btn-clear" onClick={clearSelection}>Clear</button>
+        </div>
+        <KeyboardHints />
+        <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={COLUMNS.length} />
       </div>
-      <KeyboardHints />
-      <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={COLUMNS.length} />
       <div className="col-grid-wrapper" ref={containerRef} tabIndex={0}>
         <div className="col-grid-scroll">
           <table className="col-grid-table">

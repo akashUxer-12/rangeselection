@@ -67,13 +67,15 @@ export function CardView() {
 
   return (
     <div className="view-section">
-      <div className="view-header">
-        <h3>Card View</h3>
-        <span className="view-hint">Click cards to toggle. Shift+Click for range. Like Jira/Trello board cards.</span>
-        <button className="btn-clear" onClick={clearSelection}>Clear</button>
+      <div className="view-sticky-toolbar">
+        <div className="view-header">
+          <h3>Card View</h3>
+          <span className="view-hint">Click cards to toggle. Shift+Click for range. Like Jira/Trello board cards.</span>
+          <button className="btn-clear" onClick={clearSelection}>Clear</button>
+        </div>
+        <KeyboardHints />
+        <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
       </div>
-      <KeyboardHints />
-      <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
       <div className="card-grid" ref={containerRef} tabIndex={0}>
         {CARDS.map((card, i) => (
           <div
@@ -89,6 +91,13 @@ export function CardView() {
             }}
           >
             <div className="sel-card-top">
+              <input
+                type="checkbox"
+                checked={isSelected(i)}
+                readOnly
+                tabIndex={-1}
+                className="sel-card-checkbox"
+              />
               <span className="sel-card-index">#{i}</span>
               <span
                 className="sel-card-status"

@@ -63,13 +63,15 @@ export function GridRowView() {
 
   return (
     <div className="view-section">
-      <div className="view-header">
-        <h3>Grid Rows — With Checkbox</h3>
-        <span className="view-hint">Click = toggle row. Shift = range. Toggle mode with checkboxes.</span>
-        <button className="btn-clear" onClick={clearSelection}>Clear</button>
+      <div className="view-sticky-toolbar">
+        <div className="view-header">
+          <h3>Grid Rows — With Checkbox</h3>
+          <span className="view-hint">Click = toggle row. Shift = range. Toggle mode with checkboxes.</span>
+          <button className="btn-clear" onClick={clearSelection}>Clear</button>
+        </div>
+        <KeyboardHints />
+        <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
       </div>
-      <KeyboardHints />
-      <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
       <div className="grid-container" ref={containerRef} tabIndex={0}>
         <div className="grid-header">
           <div className="grid-cell checkbox-cell">

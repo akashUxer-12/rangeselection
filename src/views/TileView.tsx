@@ -33,13 +33,15 @@ export function TileView() {
 
   return (
     <div className="view-section">
-      <div className="view-header">
-        <h3>Tile View</h3>
-        <span className="view-hint">Click tiles to select. Try Shift+Click, Ctrl+Click, Ctrl+Shift+Click</span>
-        <button className="btn-clear" onClick={clearSelection}>Clear</button>
+      <div className="view-sticky-toolbar">
+        <div className="view-header">
+          <h3>Tile View</h3>
+          <span className="view-hint">Click tiles to select. Try Shift+Click, Ctrl+Click, Ctrl+Shift+Click</span>
+          <button className="btn-clear" onClick={clearSelection}>Clear</button>
+        </div>
+        <KeyboardHints />
+        <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
       </div>
-      <KeyboardHints />
-      <StatusBar state={state} selectedCount={getSelectedCount()} totalItems={TOTAL} />
       <div
         className="tile-grid"
         ref={containerRef}
