@@ -15,7 +15,9 @@ This document covers:
 7. [Hook API Reference](#7-hook-api-reference)
 8. [Usage Examples](#8-usage-examples)
 9. [View Type Matrix](#9-view-type-matrix)
-10. [Common Pitfalls](#10-common-pitfalls)
+10. [Checkbox Patterns](#10-checkbox-patterns)
+11. [Accessibility](#11-accessibility)
+12. [Common Pitfalls](#12-common-pitfalls)
 
 ---
 
@@ -223,6 +225,26 @@ CTRL/CMD + SHIFT + CLICK
   selection = merge(existingSelection, newRange)
   focusedIndex = clickedIndex
 
+ARROW KEYS (↑↓←→)
+─────────────────────
+  move focusedIndex ±1
+  do NOT change selection
+  shiftAnchorIndex = null
+
+SPACE / ENTER
+─────────────────────
+  same as Click on focusedIndex
+  respects clickMode (toggle/standard)
+  supports all modifier combos:
+    Ctrl+Space, Shift+Space, Ctrl+Shift+Space
+
+SHIFT + ARROW
+─────────────────────
+  extend selection range ±1 item
+  if shiftAnchorIndex == null:
+    shiftAnchorIndex = focusedIndex
+  same as Shift+Click on adjacent item
+
 SHIFT KEY RELEASED
 ─────────────────────
   shiftAnchorIndex = null
@@ -234,32 +256,33 @@ SHIFT KEY RELEASED
 
 Every mouse interaction has a keyboard equivalent. The same modifier logic applies: plain = click, Ctrl = Ctrl+Click, Shift = Shift+Click, Ctrl+Shift = Ctrl+Shift+Click.
 
-### Navigation
+### Navigation (move focus only — no selection change)
+
+| Key                      | Action                                        |
+|--------------------------|-----------------------------------------------|
+| `Arrow ↑↓←→`            | Move focus to next/previous item              |
+| `Home`                   | Jump focus to first item                      |
+| `End`                    | Jump focus to last item                       |
+
+**Arrows never select.** They only move the focus ring. Press Space/Enter to commit. This matches native listbox/checkbox behavior.
+
+### Selection via Space/Enter (act on focused item)
 
 | Key                      | Action                                        | Mouse Equivalent     |
 |--------------------------|-----------------------------------------------|----------------------|
-| `Arrow ↑↓←→`            | Move focus and select that item               | Click                |
-| `Ctrl + Arrow`           | Move focus only (no selection change)         | —                    |
-| `Home`                   | Jump focus to first item                      | —                    |
-| `End`                    | Jump focus to last item                       | —                    |
+| `Space` / `Enter`        | Select/toggle the focused item                | Click                |
+| `Ctrl + Space`           | Toggle focused item, preserve rest            | Ctrl + Click         |
+| `Shift + Space`          | Range from anchor to focused                  | Shift + Click        |
+| `Ctrl + Shift + Space`   | Add range while preserving existing           | Ctrl + Shift + Click |
 
-### Selection via Enter/Space (act on focused item)
+### Range extend via Arrow Keys
 
-| Key                      | Action                                        | Mouse Equivalent     |
-|--------------------------|-----------------------------------------------|----------------------|
-| `Enter` / `Space`        | Toggle/select the focused item                | Click                |
-| `Ctrl + Enter`           | Toggle focused item, preserve rest            | Ctrl + Click         |
-| `Shift + Enter`          | Range from anchor to focused                  | Shift + Click        |
-| `Ctrl + Shift + Enter`   | Add range while preserving existing           | Ctrl + Shift + Click |
-
-### Selection via Arrow Keys
-
-| Key                      | Action                                        | Mouse Equivalent     |
-|--------------------------|-----------------------------------------------|----------------------|
-| `Shift + Arrow`          | Extend/shrink selection range one item        | Shift + Click        |
-| `Ctrl + Shift + Arrow`   | Extend range additively (preserve existing)   | Ctrl + Shift + Click |
-| `Shift + Home`           | Select from focused to first item             | —                    |
-| `Shift + End`            | Select from focused to last item              | —                    |
+| Key                      | Action                                        |
+|--------------------------|-----------------------------------------------|
+| `Shift + Arrow`          | Extend/shrink selection range one item        |
+| `Ctrl + Shift + Arrow`   | Extend range additively (preserve existing)   |
+| `Shift + Home`           | Select from focused to first item             |
+| `Shift + End`            | Select from focused to last item              |
 
 ### Utility
 
@@ -271,12 +294,13 @@ Every mouse interaction has a keyboard equivalent. The same modifier logic appli
 ### Keyboard workflow example
 
 ```
-1. Arrow Down × 5        → focus moves to item 5, item 5 selected
-2. Ctrl + Arrow Down × 3 → focus moves to item 8, selection unchanged (still item 5)
-3. Ctrl + Enter           → toggle item 8 into selection → [5] + [8]
-4. Ctrl + Arrow Down × 2 → focus moves to item 10, selection unchanged
-5. Ctrl + Shift + Enter   → add range [8,10] to selection → [5] + [8,10]
-6. Shift + Arrow Down × 3 → extend range to [5] + [8,13]
+1. Arrow Down × 5        → focus moves to item 5 (nothing selected yet)
+2. Space                  → select item 5 → [5]
+3. Arrow Down × 3         → focus moves to item 8 (selection unchanged)
+4. Ctrl + Space            → toggle item 8 into selection → [5] + [8]
+5. Arrow Down × 2         → focus moves to item 10
+6. Ctrl + Shift + Space    → add range [8,10] to selection → [5] + [8,10]
+7. Shift + Arrow Down × 3 → extend range to [5] + [8,13]
 ```
 
 This is the keyboard-only way to build disconnected multi-ranges — essential for accessibility.
@@ -438,20 +462,86 @@ useRangeSelection({
 
 ## 9. View Type Matrix
 
-| View Type             | Click Mode   | Checkboxes | Select-All | Use Case                        |
-|-----------------------|-------------|------------|------------|----------------------------------|
-| Tile View             | `toggle`    | No         | No         | Icon/thumbnail grid              |
-| Card View             | `toggle`    | No         | No         | Kanban cards, project cards      |
-| List View             | `toggle`    | Yes        | Yes        | File list, email inbox           |
-| Tree View             | `toggle`    | Yes        | Yes        | File explorer, org chart         |
-| Grid Rows (checkbox)  | `toggle`    | Yes        | Yes        | Data grid with bulk actions      |
-| Grid Rows (no checkbox)| `standard` | No         | No         | Read-heavy data grid             |
-| Grid Columns          | `standard`  | No         | No         | Spreadsheet column selection     |
-| Chart X-Axis          | `standard`  | No         | No         | Date range, category selection   |
+| View Type               | Click Mode   | Checkboxes         | Select-All | Use Case                        |
+|-------------------------|-------------|--------------------| ------------|----------------------------------|
+| Tile View               | `toggle`    | No                 | No         | Icon/thumbnail grid              |
+| Card View               | `toggle`    | Yes (on hover)     | No         | Kanban cards, project boards     |
+| List View               | `toggle`    | Yes (always)       | Yes        | File list, email inbox           |
+| Vertical Filter         | `toggle`    | Yes (always)       | Yes        | Sidebar filters, faceted search  |
+| Tree View               | `toggle`    | Yes (always)       | Yes        | File explorer, org chart         |
+| Grid Rows (checkbox)    | `toggle`    | Yes (always)       | Yes        | Data grid with bulk actions      |
+| Grid Rows (no checkbox) | `standard`  | No                 | No         | Read-heavy data grid             |
+| Grid Columns            | `standard`  | No                 | No         | Spreadsheet column selection     |
+| Chart X-Axis            | `standard`  | No                 | No         | Date range, category selection   |
 
 ---
 
-## 10. Common Pitfalls
+## 10. Checkbox Patterns
+
+Three approaches for using checkboxes with range selection.
+
+### Always visible
+
+Checkbox shown on every item at all times. Click the row = toggle the checkbox. Header checkbox = select all / deselect all.
+
+**Used in:** List View, Vertical Filter, Tree View, Grid Rows (with checkbox)
+
+```tsx
+<div className="row" onMouseDown={(e) => { e.preventDefault(); handleItemInteraction(i, e); }}>
+  <input type="checkbox" checked={isSelected(i)} readOnly tabIndex={-1} />
+  <span>{item.name}</span>
+</div>
+```
+
+### Show on hover / focus / selected
+
+Checkbox hidden by default (`opacity: 0`). Appears when the item is hovered, focused via keyboard, or selected. Cleaner visual, same interaction model.
+
+**Used in:** Card View
+
+```css
+.card-checkbox         { opacity: 0; transition: opacity 0.12s; }
+.card:hover .card-checkbox,
+.card.focused .card-checkbox,
+.card.selected .card-checkbox { opacity: 1; }
+```
+
+### No checkbox
+
+Selection indicated only via background highlight and focus ring. Multi-select requires Ctrl/Cmd + Click.
+
+**Used in:** Tile View, Grid Rows (no checkbox), Grid Columns, Chart X-Axis
+
+**Important:** Checkboxes are always `readOnly` visual indicators. All click handling goes through `onMouseDown` on the row/card, never `onChange` on the checkbox. This ensures Shift+Click and Ctrl+Click modifier keys are captured correctly.
+
+---
+
+## 11. Accessibility
+
+### Focus management
+
+- Container has `tabIndex={0}` so it can receive keyboard focus
+- Auto-focus on mount / tab switch so keyboard works immediately
+- Focused item scrolls into view automatically
+- Visible focus ring distinguishes focused from selected
+
+### Keyboard-first design
+
+Arrow keys move focus only — they never change selection. This matches native `<select>` and listbox behavior and prevents accidental selection changes while navigating.
+
+To select: press `Space` or `Enter`. All modifier combos work: `Ctrl+Space` to toggle, `Shift+Space` for range, `Ctrl+Shift+Space` to add a range.
+
+### Screen reader considerations
+
+For production, add:
+- `role="listbox"` on the container
+- `role="option"` on each item
+- `aria-selected` synced with `isSelected()`
+- `aria-activedescendant` pointing to the focused item's ID
+
+---
+
+## 12. Common Pitfalls
 
 ### 1. Merging focus and selection into one state
 
