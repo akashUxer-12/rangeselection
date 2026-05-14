@@ -30,6 +30,9 @@ export default function App() {
 
   return (
     <div className="app">
+      <div className="banner">
+        Created by <strong>Akash</strong> for <strong>o9 Arvo Design System</strong>
+      </div>
       <header className="app-header">
         <div className="header-content">
           <div className="header-left">
@@ -40,9 +43,7 @@ export default function App() {
             </div>
           </div>
           <div className="header-right">
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="header-link">
-              Design System
-            </a>
+            <span className="header-badge">o9 Arvo</span>
           </div>
         </div>
       </header>
